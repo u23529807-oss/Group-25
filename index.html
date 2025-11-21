@@ -2,66 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>DeWalt Supply – Dashboard</title>
+  <title>DEWALT CONSTRUCTION SUPPLY CHAIN – Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap & Styles -->
+
+  <!-- Bootstrap & Custom Styles -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
+
 <body class="dashboard-page">
   <div class="app-container d-flex">
-    <!-- Sidebar -->
+
+    <!-- =========================
+         SIDEBAR (NO ICONS)
+         ========================= -->
     <nav class="sidebar">
       <div class="sidebar-logo">
-        <span class="logo-icon">🏗️</span>
-        <span class="logo-text">DeWalt Supply</span>
+        <span class="logo-text">DEWALT SUPPLY</span>
       </div>
+
       <ul class="nav flex-column sidebar-nav">
         <li class="nav-item">
-          <a href="index.html" class="nav-link active">
-            <span class="nav-icon">📊</span>
-            <span>Dashboard</span>
-          </a>
+          <a href="index.html" class="nav-link active">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a href="supplier.html" class="nav-link">
-            <span class="nav-icon">🚚</span>
-            <span>Supplier Portal</span>
-          </a>
+          <a href="supplier.html" class="nav-link">Supplier Portal</a>
         </li>
         <li class="nav-item">
-          <a href="manager.html" class="nav-link">
-            <span class="nav-icon">📦</span>
-            <span>Inventory</span>
-          </a>
+          <a href="manager.html" class="nav-link">Inventory</a>
         </li>
         <li class="nav-item">
-          <a href="reports.html" class="nav-link">
-            <span class="nav-icon">📈</span>
-            <span>Reports</span>
-          </a>
+          <a href="reports.html" class="nav-link">Reports</a>
         </li>
       </ul>
     </nav>
 
-    <!-- Main content -->
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
     <div class="main-content flex-grow-1">
-      <!-- Topbar -->
+
+      <!-- TOPBAR -->
       <header class="topbar d-flex align-items-center justify-content-between">
         <div class="topbar-title">
-          <h1 class="page-title">DeWalt Construction Supply Chain Control</h1>
-          <p class="page-subtitle">Live visibility of materials, sites, suppliers and schedule risk.</p>
+
+          <!-- BIG BUSINESS NAME -->
+          <h1 class="page-title" style="font-size: 2rem; font-weight: 800;">
+            DEWALT CONSTRUCTION SUPPLY CHAIN
+          </h1>
+
+          <p class="page-subtitle">
+            Real-Time Visibility Across Materials, Sites & Suppliers
+          </p>
         </div>
+
         <div class="topbar-actions d-flex align-items-center gap-2">
           <span class="badge bg-success topbar-badge">LIVE</span>
           <span class="topbar-user">Manager Console</span>
         </div>
       </header>
 
-      <!-- Page-specific content -->
+      <!-- MAIN PAGE CONTENT -->
       <main class="content">
-        <!-- KPI Row -->
-        <div class="row g-3 mb-3">
+
+        <!-- =========================
+             KPI ROW
+             ========================= -->
+        <div class="row g-3 mb-4">
           <div class="col-md-4">
             <div class="card p-3 h-100">
               <div class="card-title">Sites</div>
@@ -112,50 +119,75 @@
           </div>
         </div>
 
-        <!-- Sites currently working at -->
-        <div class="row g-3 mb-3">
+        <!-- =========================
+             SITES CURRENTLY WORKING AT
+             (NO IMAGES, ONLY COLOR CARDS)
+             ========================= -->
+
+        <div class="row g-3 mb-4">
+
           <div class="col-md-6">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Site: Klerksoord</h5>
-                <p class="small text-muted mb-2">
-                  Double-storey residential development. Focus: foundations completed, brickwork in progress, roof scheduled within 2 weeks.
-                </p>
-                <div class="ratio ratio-16x9 mb-2">
-                  <!-- Replace src with your actual image path -->
-                  <img src="static/img/klerksoord-house.jpg" class="img-fluid rounded" alt="Klerksoord house">
-                </div>
-                <span class="badge bg-info align-self-start mt-auto">In Progress</span>
-              </div>
+            <div class="card h-100 border border-primary p-3">
+              <h5 class="card-title">Klerksoord</h5>
+              <p class="small text-muted">
+                Double-storey residential builds. Brickwork in progress, roofing planned soon.
+              </p>
+              <span class="badge bg-info">In Progress</span>
             </div>
           </div>
 
           <div class="col-md-6">
-            <div class="card h-100">
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Site: Amandasig</h5>
-                <p class="small text-muted mb-2">
-                  Single-storey cluster units. Focus: services installation, internal finishes and snagging on first units.
-                </p>
-                <div class="ratio ratio-16x9 mb-2">
-                  <!-- Replace src with your actual image path -->
-                  <img src="static/img/amandasig-house.jpg" class="img-fluid rounded" alt="Amandasig house">
+            <div class="card h-100 border border-warning p-3">
+              <h5 class="card-title">Amandasig</h5>
+              <p class="small text-muted">
+                Cluster units. Services installation underway with internal finishes starting.
+              </p>
+              <span class="badge bg-warning">Work in Progress</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =========================
+             ADD SITE + CAPTURED SITES
+             (NOW CORRECTLY INSIDE MAIN)
+             ========================= -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6">
+            <div class="card p-3">
+              <div class="card-title">Add Site</div>
+              <form id="siteForm" class="row g-2">
+                <div class="col-md-6">
+                  <label for="siteName" class="form-label small mb-1">Site name</label>
+                  <input type="text" id="siteName" class="form-control form-control-sm" placeholder="e.g. Klerksoord Extension">
                 </div>
-                <span class="badge bg-warning align-self-start mt-auto">WIP – Services & Finishes</span>
-              </div>
+                <div class="col-md-6">
+                  <label for="siteLocation" class="form-label small mb-1">Location</label>
+                  <input type="text" id="siteLocation" class="form-control form-control-sm" placeholder="e.g. Pretoria North">
+                </div>
+                <div class="col-12 d-flex justify-content-end">
+                  <button type="submit" class="btn btn-sm btn-primary mt-2">Add site</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card p-3">
+              <div class="card-title">Captured Sites</div>
+              <ul id="siteList" class="small mb-0"></ul>
             </div>
           </div>
         </div>
 
-        <!-- Orders chart + Terms & Contacts -->
+        <!-- =========================
+             CHARTS + TERMS + CONTACTS
+             ========================= -->
         <div class="row g-3">
           <div class="col-lg-7">
             <div class="card p-3" style="min-height: 360px;">
               <div class="card-title">Order Status Overview</div>
               <canvas id="orderStatusChart"></canvas>
-              <p class="small text-muted mt-2">
-                This chart shows the distribution of purchase orders across the construction supply chain – from scheduled to delivered.
-              </p>
             </div>
           </div>
 
@@ -163,16 +195,15 @@
             <div class="card p-3 mb-3">
               <div class="card-title">Terms & Conditions</div>
               <ul class="small mb-2">
-                <li><strong>Website Terms and Conditions:</strong> Use of this dashboard is restricted to authorised DeWalt Construction staff and approved suppliers.</li>
-                <li><strong>Contractual Terms and Conditions:</strong> All purchase orders raised through this system remain subject to the underlying construction contracts.</li>
+                <li>Website usage restricted to authorised DeWalt staff.</li>
+                <li>All orders remain subject to contract terms.</li>
               </ul>
               <div class="small">
-                <strong>Share & Alerts:</strong><br>
-                While DeWalt is not a listed company, project stakeholders can register for:
-                <ul class="mb-0">
-                  <li>Site progress and delay alerts</li>
-                  <li>Material stock-out warnings</li>
-                  <li>Weekly supply chain summaries</li>
+                <strong>Alerts available:</strong>
+                <ul>
+                  <li>Site progress</li>
+                  <li>Stock-out warnings</li>
+                  <li>Weekly supply chain reports</li>
                 </ul>
               </div>
             </div>
@@ -180,67 +211,35 @@
             <div class="card p-3">
               <div class="card-title">Head Office Contact</div>
               <div class="small mb-2">
-                <strong>Head Office – Address</strong><br>
+                <strong>Address</strong><br>
                 53 Andries Street<br>
                 Wynberg, Johannesburg<br>
                 South Africa, 2090
               </div>
               <div class="small mb-2">
-                <strong>Head Office – Contact</strong><br>
+                <strong>Contact</strong><br>
                 Tel: +27 11 321 7200<br>
                 Fax: +27 11 887 4364<br>
                 Email: info@dewaltconstruction.co.za
-              </div>
-              <div class="small">
-                <strong>Tender Enquiries</strong><br>
-                • Commercial building projects<br>
-                • Civil and industrial plant projects<br>
-                • Roads, earthworks and mining projects
               </div>
             </div>
           </div>
         </div>
       </main>
+
     </div>
   </div>
 
-  <div class="row g-3 mb-3">
-  <div class="col-lg-6">
-    <div class="card p-3">
-      <div class="card-title">Add Site</div>
-      <form id="siteForm" class="row g-2">
-        <div class="col-md-6">
-          <label for="siteName" class="form-label small mb-1">Site name</label>
-          <input type="text" id="siteName" class="form-control form-control-sm" placeholder="e.g. Klerksoord Extension">
-        </div>
-        <div class="col-md-6">
-          <label for="siteLocation" class="form-label small mb-1">Location</label>
-          <input type="text" id="siteLocation" class="form-control form-control-sm" placeholder="e.g. Pretoria North">
-        </div>
-        <div class="col-12 d-flex justify-content-end">
-          <button type="submit" class="btn btn-sm btn-primary mt-2">Add site</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="col-lg-6">
-    <div class="card p-3">
-      <div class="card-title">Captured Sites</div>
-      <ul id="siteList" class="small mb-0"></ul>
-    </div>
-  </div>
-</div>
-
-  <!-- Global loading overlay -->
+  <!-- LOADING OVERLAY -->
   <div id="loadingOverlay" class="loading-overlay d-none">
     <div class="loading-spinner"></div>
     <div class="loading-text">Loading latest supply chain data…</div>
   </div>
 
-  <!-- Scripts -->
+  <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="app.js"></script>
+
 </body>
 </html>
