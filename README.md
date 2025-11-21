@@ -110,45 +110,53 @@ git-BFB_Project
 
 ```mermaid
 erDiagram
-    SITES ||--o{ ORDERS : receives
-    SUPPLIERS ||--o{ ORDERS : fulfills
-    MATERIALS ||--o{ ORDERS : item
-    MATERIALS ||--o{ INVENTORY : stocked_as
+    SITE ||--o{ INVENTORY : "holds"
+    MATERIAL ||--o{ INVENTORY : "is stocked at"
+    SITE ||--o{ ORDER : "requests"
+    SUPPLIER ||--o{ ORDER : "fulfils"
+    MATERIAL ||--o{ ORDER : "is ordered as"
 
-    SITES {
-      INT site_id PK
-      STRING site_name
-      STRING status
+    SITE {
+        int site_id PK
+        string site_name
+        string status
     }
 
-    SUPPLIERS {
-      INT supplier_id PK
-      STRING name
-      STRING email
-      STRING phone
+    SUPPLIER {
+        int supplier_id PK
+        string name
+        string email
+        string phone
     }
 
-    MATERIALS {
-      INT material_id PK
-      STRING name
-      STRING sku
-      STRING category
+    MATERIAL {
+        int material_id PK
+        string name
+        string sku
+        string category
     }
 
     INVENTORY {
-      INT inventory_id PK
-      INT material_id FK
-      INT qty
-      INT low_threshold
+        int inventory_id PK
+        int material_id FK
+        int site_id FK
+        int qty
+        int low_threshold
+        datetime created_at
+        datetime updated_at
     }
 
-    ORDERS {
-      INT order_id PK
-      INT material_id FK
-      INT supplier_id FK
-      DATE eta
-      STRING status
-      DATE delivered_at
+    ORDER {
+        int order_id PK
+        int material_id FK
+        int supplier_id FK
+        int site_id FK
+        date eta
+        string status
+        date delivered_at
+        string delay_reason
+        datetime created_at
+        datetime updated_at
     }
 ```
 
