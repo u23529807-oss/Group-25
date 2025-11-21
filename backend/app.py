@@ -162,6 +162,13 @@ def create_app():
             order.delay_reason = data["delay_reason"]
         db.session.commit()
         return jsonify({"message": "Order updated"})
+    
+    @app.route("/api/orders/<int:order_id>", methods=["DELETE"])
+    def delete_order(order_id):
+        order = Order.query.get_or_404(order_id)
+        db.session.delete(order)
+        db.session.commit()
+        return jsonify({"message": "Order deleted"})
 
     # ---------- KPI Endpoint (for Reports) ---------- #
     @app.route("/api/kpi", methods=["GET"])
