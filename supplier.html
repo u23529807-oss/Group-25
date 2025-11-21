@@ -1,65 +1,143 @@
 <!doctype html>
-<html lang = "en" data-bs-theme = "dark">
+<html lang="en">
 <head>
-  <meta charset = "utf-8" />
-  <meta name = "viewport" content = "width=device-width, initial-scale=1" />
-  <title>Supplier Delivery Portal</title>
-  <meta name = "description" content = "Update delivery status and ETA for construction material orders." />
-  <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel = "stylesheet">
-  <link href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel = "stylesheet">
-  <link href = "style.css" rel = "stylesheet" />
+  <meta charset="utf-8">
+  <title>DeWalt Supply – Supplier Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
-<body class = "bg-light">
-  <nav class = "navbar navbar-expand-lg navbar-dark bg-primary" aria-label = "Main">
-    <div class = "container">
-      <a class = "navbar-brand d-flex align-items-center gap-2" href = "index.html">
-        <i class = "bi bi-box-seam"></i> BFB Supply Portal
-      </a>
-      <button class = "navbar-toggler" type = "button" data-bs-toggle = "collapse" data-bs-target = "#nav" aria-controls = "nav" aria-expanded = "false" aria-label = "Toggle navigation">
-        <span class = "navbar-toggler-icon"></span>
-      </button>
-      <div id = "nav" class = "collapse navbar-collapse">
-        <ul class = "navbar-nav ms-auto">
-          <li class = "nav-item"><a class = "nav-link" href = "index.html">Dashboard</a></li>
-          <li class = "nav-item"><a class = "nav-link" href = "supplier.html">Orders</a></li>
-          <li class = "nav-item"><a class = "nav-link" href = "manager.html">Inventory</a></li>
-          <li class = "nav-item"><a class = "nav-link" href = "reports.html">Reports</a></li>
-        </ul>
+<body class="supplier-page">
+  <div class="app-container d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🏗️</span>
+        <span class="logo-text">DeWalt Supply</span>
       </div>
-    </div>
-  </nav>
+      <ul class="nav flex-column sidebar-nav">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="supplier.html" class="nav-link active">
+            <span class="nav-icon">🚚</span>
+            <span>Supplier Portal</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="manager.html" class="nav-link">
+            <span class="nav-icon">📦</span>
+            <span>Inventory</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <main class = "container my-5">
-    <div class = "d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-      <h3 class = "mb-0">Supplier Delivery Portal</h3>
-      <div class = "input-group" style = "max-width: 320px;">
-        <span class = "input-group-text"><i class = "bi bi-search"></i></span>
-        <input id = "orders-search" type = "search" class = "form-control" placeholder = "Search orders…" aria-label = "Search orders">
-      </div>
-    </div>
+    <!-- Main content -->
+    <div class="main-content flex-grow-1">
+      <!-- Topbar -->
+      <header class="topbar d-flex align-items-center justify-content-between">
+        <div class="topbar-title">
+          <h1 class="page-title">Supplier Order Board</h1>
+          <p class="page-subtitle">Update ETAs, report delays and confirm deliveries in real time.</p>
+        </div>
+        <div class="topbar-actions d-flex align-items-center gap-2">
+          <span class="badge bg-info topbar-badge">Supplier View</span>
+        </div>
+      </header>
 
-    <div class = "table-responsive shadow-sm bg-white rounded">
-      <table class = "table align-middle mb-0">
-        <thead class = "table-light">
-         <tr>
-            <th scope = "col" data-sort = "id">Order #</th>
-            <th scope = "col" data-sort = "material">Material</th>
-            <th scope = "col" data-sort = "supplier">Supplier</th>
-            <th scope = "col" data-sort = "eta">ETA</th>
-            <th scope = "col" data-sort = "status">Status</th>
-            <th scope = "col">Action</th>
-         </tr>
-        </thead>
-        <tbody id = "orders-tbody"></tbody>
-      </table>
-    </div>
-    <p class = "form-text mt-3"> Tip: Use <kbd> Update ETA </kbd> to reschedule; use <kbd>Mark Delivered</kbd> when a truck checks in.</p>
-  </main>
+      <main class="content">
+        <div class="row g-3 mb-3">
+          <div class="col-lg-8">
+            <div class="card p-3">
+              <div class="card-title">Assigned Orders</div>
+              <p class="small text-muted">
+                Use the buttons to mark loads as <strong>Delivered</strong> or to flag <strong>Delays</strong> with updated ETAs.
+              </p>
+              <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                  <thead>
+                    <tr>
+                      <th>Order #</th>
+                      <th>Material</th>
+                      <th>Site</th>
+                      <th>ETA</th>
+                      <th>Status</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="supplierOrdersTable">
+                    <!-- Filled by app.js -->
+                  </tbody>
+                </table>
+              </div>
 
-  <footer class = "py-4 border-top bg-white">
-    <div class = "container small text-center text-muted">© 2025 DeWalt Construction</div>
-  </footer>
-  <script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src = "app.js"></script>
+              <!-- Empty state for when there are no orders -->
+              <div id="emptyStateBlock" class="empty-state d-none">
+                <div class="empty-icon">✅</div>
+                <h3>No active deliveries</h3>
+                <p>There are currently no outstanding orders assigned to this supplier profile.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Supplier info cards -->
+          <div class="col-lg-4">
+            <div class="card p-3 mb-3">
+              <div class="card-title">Preferred Supplier: Build It</div>
+              <p class="small mb-1"><strong>Category focus</strong></p>
+              <ul class="small mb-2">
+                <li>Bricks (Pallets)</li>
+                <li>Concrete & ready-mix</li>
+                <li>River sand & crusher stone</li>
+                <li>Cement and basic building materials</li>
+              </ul>
+              <p class="small mb-1"><strong>Contact details</strong></p>
+              <p class="small mb-0">
+                Branch: Build It Pretoria North<br>
+                Tel: +27 12 555 0000<br>
+                Email: orders@buildit.co.za
+              </p>
+            </div>
+
+            <div class="card p-3">
+              <div class="card-title">Other Supply Partners</div>
+              <p class="small mb-1"><strong>Civil & Structural Materials</strong></p>
+              <ul class="small mb-2">
+                <li>Steel service centres – TMT steel bars, rebar and mesh</li>
+                <li>Roofing suppliers – roof tiles and roof trusses</li>
+              </ul>
+              <p class="small">
+                For all queries about order numbers, ETAs or site access, please contact the
+                DeWalt procurement team at <strong>procurement@dewaltconstruction.co.za</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Global loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay d-none">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Syncing orders with DeWalt…</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

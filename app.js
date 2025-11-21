@@ -240,7 +240,7 @@ async function adjustQty(inventoryId, newQty) {
 }
 
 // =======================================
-// REPORTS PAGE
+// REPORTS PAGE (reports.html)
 // =======================================
 async function loadReports() {
     try {
@@ -249,7 +249,9 @@ async function loadReports() {
         const res = await fetch(`${API_BASE}/kpi`);
         const data = await res.json();
 
-        // ORDERS CHART
+        // ------------------------------
+        // ORDERS STATUS PIE CHART
+        // ------------------------------
         const ctx1 = document.getElementById("ordersPieChart").getContext("2d");
         new Chart(ctx1, {
             type: "pie",
@@ -262,12 +264,19 @@ async function loadReports() {
                         data.orders.by_status.DELAYED,
                         data.orders.by_status.DELIVERED
                     ],
-                    backgroundColor: ["#6c757d", "#0d6efd", "#dc3545", "#28a745"]
+                    backgroundColor: [
+                        "#6c757d", // Scheduled
+                        "#0d6efd", // In Transit
+                        "#dc3545", // Delayed
+                        "#28a745"  // Delivered
+                    ]
                 }]
             }
         });
 
-        // INVENTORY CHART
+        // ------------------------------
+        // INVENTORY HEALTH PIE CHART
+        // ------------------------------
         const ctx2 = document.getElementById("inventoryPieChart").getContext("2d");
         new Chart(ctx2, {
             type: "pie",
@@ -279,8 +288,127 @@ async function loadReports() {
                         data.inventory.low,
                         data.inventory.reorder
                     ],
-                    backgroundColor: ["#28a745", "#ffc107", "#dc3545"]
+                    backgroundColor: [
+                        "#28a745", // OK
+                        "#ffc107", // Low
+                        "#dc3545"  // Reorder
+                    ]
                 }]
+            }
+        });
+
+        // ----------------------------------------------------
+        // NEW: WATER & ELECTRICITY USAGE ACROSS BUILD PHASES
+        // ----------------------------------------------------
+        const utilityPhases = [
+            "Excavation",
+            "Concrete",
+            "Brickwork",
+            "Roofing",
+            "Plaster",
+            "Finishes"
+        ];
+
+        const waterUsage = [800, 2500, 1800, 950, 600, 450];  // litres
+        const electricityUsage = [120, 340, 220, 150, 180, 260]; // kWh
+
+        const ctx3 = document.getElementById("utilityUsageChart").getContext("2d");
+        new Chart(ctx3, {
+            type: "bar",
+            data: {
+                labels: utilityPhases,
+                datasets: [
+                    {
+                        label: "Water Usage (Litres)",
+                        data: waterUsage,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)", // blue
+                        borderColor: "rgba(54, 162, 235, 1)",
+                        borderWidth: 1
+                    },
+                    {
+                        label: "Electricity Usage (kWh)",
+                        data: electricityUsage,
+                        backgroundColor: "rgba(255, 206, 86, 0.6)", // yellow
+                        borderColor: "rgba(255, 206, 86, 1)",
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: "#e5e7eb" }
+                    },
+                    x: {
+                        ticks: { color: "#e5e7eb" }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "#e5e7eb",
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // -------------------------------------------------------
+        // NEW: HOUSE BUILD PROGRESS (8 HOUSES)
+        // -------------------------------------------------------
+        const houseLabels = [
+            "House 1", "House 2", "House 3", "House 4",
+            "House 5", "House 6", "House 7", "House 8"
+        ];
+
+        // Dummy realistic progress percentages
+        const progress = [82, 67, 40, 55, 90, 73, 28, 61];
+
+        const ctx4 = document.getElementById("houseProgressChart").getContext("2d");
+        new Chart(ctx4, {
+            type: "bar",
+            data: {
+                labels: houseLabels,
+                datasets: [{
+                    label: "Completion (%)",
+                    data: progress,
+                    backgroundColor: progress.map(value => {
+                        if (value >= 80) return "rgba(40, 167, 69, 0.7)";   // green
+                        if (value >= 60) return "rgba(0, 123, 255, 0.7)";   // blue
+                        if (value >= 40) return "rgba(255, 193, 7, 0.7)";   // yellow
+                        return "rgba(220, 53, 69, 0.7)";                    // red
+                    }),
+                    borderColor: "rgba(255,255,255,0.4)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { color: "#e5e7eb" }
+                    },
+                    x: {
+                        ticks: { color: "#e5e7eb" }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: "#e5e7eb" }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.raw}% complete`
+                        }
+                    }
+                }
             }
         });
 

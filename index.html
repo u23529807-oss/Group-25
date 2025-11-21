@@ -1,153 +1,218 @@
 <!doctype html>
-<html lang = "en" data-bs-theme = "dark">
+<html lang="en">
 <head>
-  <meta charset = "utf-8" />
-  <meta name = "viewport" content = "width=device-width, initial-scale=1" />
-  <title> BFB Supply Chain – Dashboard </title>
-  <meta name = "description" content = "Track construction materials, deliveries, and site stock across projects in one place." />
-  <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel = "stylesheet">
-  <link href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel = "stylesheet">
-  <link href = "style.css" rel = "stylesheet" />
+  <meta charset="utf-8">
+  <title>DeWalt Supply – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap & Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
-<body class = "bg-light">
-  <nav class = "navbar navbar-expand-lg navbar-dark bg-primary" aria-label="Main">
-    <div class = "container">
-      <a class = "navbar-brand fw-semibold d-flex align-items-center gap-2" href = "index.html">
-        <i class = "bi bi-box-seam"></i> BFB Supply Portal
-      </a>
-      <button class = "navbar-toggler" type = "button" data-bs-toggle = "collapse" data-bs-target = "#nav" aria-controls = "nav" aria-expanded = "false" aria-label = "Toggle navigation">
-        <span class = "navbar-toggler-icon"></span>
-      </button>
-      <div id = "nav" class = "collapse navbar-collapse">
-        <ul class = "navbar-nav ms-auto">
-          <li class = "nav-item"><a class = "nav-link" href = "index.html"> Dashboard </a></li>
-          <li class = "nav-item"><a class = "nav-link" href = "supplier.html"> Orders </a></li>
-          <li class = "nav-item"><a class = "nav-link" href = "manager.html"> Inventory </a></li>
-          <li class = "nav-item"><a class = "nav-link" href = "reports.html"> Reports </a></li>
-        </ul>
+<body class="dashboard-page">
+  <div class="app-container d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🏗️</span>
+        <span class="logo-text">DeWalt Supply</span>
       </div>
-    </div>
-  </nav>
+      <ul class="nav flex-column sidebar-nav">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link active">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="supplier.html" class="nav-link">
+            <span class="nav-icon">🚚</span>
+            <span>Supplier Portal</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="manager.html" class="nav-link">
+            <span class="nav-icon">📦</span>
+            <span>Inventory</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="reports.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <header class = "py-5 bg-secondary-subtle border-bottom">
-    <div class = "container text-center">
-      <h1 class = "display-6 fw-bold">DeWalt Construction<br>Supply Chain Dashboard</h1>
-      <p class = "text-muted mt-2">Track materials, deliveries, and stock across sites.</p>
-      <div class = "d-flex flex-wrap gap-2 justify-content-center">
-        <button class = "btn btn-outline-primary btn-sm" data-bs-toggle = "modal" data-bs-target = "#addOrderModal">
-          <i class="bi bi-plus-circle me-1"></i> Add Order
-        </button>
-        <a class = "btn btn-link btn-sm" href="supplier.html"><i class="bi bi-truck me-1"></i> Manage Orders</a>
-      </div>
-    </div>
-  </header>
+    <!-- Main content -->
+    <div class="main-content flex-grow-1">
+      <!-- Topbar -->
+      <header class="topbar d-flex align-items-center justify-content-between">
+        <div class="topbar-title">
+          <h1 class="page-title">DeWalt Construction Supply Chain Control</h1>
+          <p class="page-subtitle">Live visibility of materials, sites, suppliers and schedule risk.</p>
+        </div>
+        <div class="topbar-actions d-flex align-items-center gap-2">
+          <span class="badge bg-success topbar-badge">LIVE</span>
+          <span class="topbar-user">Manager Console</span>
+        </div>
+      </header>
 
-  <main class = "container my-5">
-    <div class = "row g-4">
-      <div class = "col-md-4">
-        <div class = "card text-white bg-primary shadow-sm kpi">
-          <div class = "card-body">
-            <h6 class = "card-title text-uppercase d-flex justify-content-between">
-              Active Orders <i class = "bi bi-clipboard-check"></i>
-            </h6>
-            <div class = "display-6 fw-bold" id = "kpi-orders">—</div>
+      <!-- Page-specific content -->
+      <main class="content">
+        <!-- KPI Row -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="card p-3 h-100">
+              <div class="card-title">Sites</div>
+              <div class="d-flex justify-content-between align-items-end">
+                <div>
+                  <div class="fs-3 fw-semibold" id="totalSites">0</div>
+                  <div class="text-muted small">Total Active Sites</div>
+                </div>
+                <div class="text-end small">
+                  <div>Working: <span id="workingSites">0</span></div>
+                  <div>WIP: <span id="wipSites">0</span></div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class = "col-md-4">
-        <div class = "card text-white bg-warning shadow-sm kpi">
-          <div class = "card-body">
-            <h6 class = "card-title text-uppercase d-flex justify-content-between">
-              Deliveries in Transit <i class = "bi bi-truck"></i>
-            </h6>
-            <div class = "display-6 fw-bold" id = "kpi-transit">—</div>
-          </div>
-        </div>
-      </div>
-      <div class = "col-md-4">
-        <div class = "card text-white bg-danger shadow-sm kpi">
-          <div class = "card-body">
-            <h6 class = "card-title text-uppercase d-flex justify-content-between">
-              Low Stock Items <i class = "bi bi-exclamation-triangle"></i>
-            </h6>
-            <div class = "display-6 fw-bold" id = "kpi-low">—</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <section class = "mt-5" aria-labelledby="orders-heading">
-      <div class = "d-flex align-items-center justify-content-between mb-2">
-        <h5 id="orders-heading" class = "mb-0">Order Details</h5>
-        <div class = "d-flex gap-2">
-          <button id="btn-reset-data" class = "btn btn-outline-danger btn-sm">
-            <i class = "bi bi-arrow-counterclockwise me-1"></i> Reset Data
-          </button>
-          <button id="btn-export" class = "btn btn-outline-secondary btn-sm">
-            <i class = "bi bi-download me-1"></i> Export JSON
-          </button>
-          <label class = "btn btn-outline-secondary btn-sm mb-0">
-            <i class = "bi bi-upload me-1"></i> Import JSON
-            <input id = "input-import" type = "file" accept = "application/json" hidden />
-          </label>
-        </div>
-      </div>
-      <div id = "orders-grid" class = "row row-cols-1 row-cols-md-3 g-4">
-        <noscript><p class = "text-muted">Enable JavaScript to see live order cards.</p></noscript>
-      </div>
-    </section>
-  </main>
+          <div class="col-md-4">
+            <div class="card p-3 h-100">
+              <div class="card-title">Inventory Health</div>
+              <div class="d-flex justify-content-between align-items-end">
+                <div>
+                  <div class="fs-3 fw-semibold" id="inventoryOK">0</div>
+                  <div class="text-muted small">Materials OK</div>
+                </div>
+                <div class="text-end small">
+                  <div>Low: <span id="inventoryLow">0</span></div>
+                  <div>Reorder: <span id="inventoryReorder">0</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-  <footer class = "py-4 border-top bg-white">
-    <div class = "container small text-center text-muted">
-      © 2025 DeWalt Construction — BFB Supply Chain Management System
-    </div>
-  </footer>
+          <div class="col-md-4">
+            <div class="card p-3 h-100">
+              <div class="card-title">Orders</div>
+              <div class="d-flex justify-content-between align-items-end">
+                <div>
+                  <div class="fs-3 fw-semibold" id="totalOrders">0</div>
+                  <div class="text-muted small">Total Open Orders</div>
+                </div>
+                <div class="text-end small">
+                  <div>Scheduled: <span id="scheduledOrders">0</span></div>
+                  <div>In Transit: <span id="inTransitOrders">0</span></div>
+                  <div>Delivered: <span id="deliveredOrders">0</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <!-- Add Order Modal -->
-  <div class = "modal fade" id = "addOrderModal" tabindex = "-1" aria-labelledby = "addOrderLabel" aria-hidden = "true">
-    <div class = "modal-dialog">
-      <form class = "modal-content needs-validation" id = "add-order-form" novalidate>
-        <div class = "modal-header">
-          <h5 class = "modal-title" id = "addOrderLabel">Add New Order</h5>
-          <button type = "button" class = "btn-close" data-bs-dismiss = "modal" aria-label = "Close"></button>
+        <!-- Sites currently working at -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Site: Klerksoord</h5>
+                <p class="small text-muted mb-2">
+                  Double-storey residential development. Focus: foundations completed, brickwork in progress, roof scheduled within 2 weeks.
+                </p>
+                <div class="ratio ratio-16x9 mb-2">
+                  <!-- Replace src with your actual image path -->
+                  <img src="static/img/klerksoord-house.jpg" class="img-fluid rounded" alt="Klerksoord house">
+                </div>
+                <span class="badge bg-info align-self-start mt-auto">In Progress</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Site: Amandasig</h5>
+                <p class="small text-muted mb-2">
+                  Single-storey cluster units. Focus: services installation, internal finishes and snagging on first units.
+                </p>
+                <div class="ratio ratio-16x9 mb-2">
+                  <!-- Replace src with your actual image path -->
+                  <img src="static/img/amandasig-house.jpg" class="img-fluid rounded" alt="Amandasig house">
+                </div>
+                <span class="badge bg-warning align-self-start mt-auto">WIP – Services & Finishes</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class = "modal-body">
-          <div class = "mb-3">
-            <label for = "order-material" class = "form-label">Material</label>
-            <input type = "text" class = "form-control" id = "order-material" required placeholder = "e.g., Cement Bags">
-            <div class = "invalid-feedback">Please enter a material name.</div>
+
+        <!-- Orders chart + Terms & Contacts -->
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <div class="card p-3" style="min-height: 360px;">
+              <div class="card-title">Order Status Overview</div>
+              <canvas id="orderStatusChart"></canvas>
+              <p class="small text-muted mt-2">
+                This chart shows the distribution of purchase orders across the construction supply chain – from scheduled to delivered.
+              </p>
+            </div>
           </div>
-          <div class = "mb-3">
-            <label for = "order-supplier" class = "form-label">Supplier</label>
-            <input type = "text" class = "form-control" id = "order-supplier" required placeholder = "e.g., BuildPro">
-            <div class = "invalid-feedback">Please enter the supplier.</div>
-          </div>
-          <div class = "mb-3">
-            <label for = "order-eta" class = "form-label">ETA</label>
-            <input type = "date" class = "form-control" id = "order-eta" required>
-            <div class = "invalid-feedback">Please choose a valid ETA.</div>
-          </div>
-          <div class = "mb-3">
-            <label for = "order-status" class = "form-label">Status</label>
-            <select id = "order-status" class = "form-select" required>
-              <option value = "Scheduled" selected>Scheduled</option>
-              <option value = "In Transit">In Transit</option>
-              <option value = "Delayed">Delayed</option>
-              <option value = "Delivered">Delivered</option>
-            </select>
-            <div class = "invalid-feedback" >Please choose a status.</div>
+
+          <div class="col-lg-5">
+            <div class="card p-3 mb-3">
+              <div class="card-title">Terms & Conditions</div>
+              <ul class="small mb-2">
+                <li><strong>Website Terms and Conditions:</strong> Use of this dashboard is restricted to authorised DeWalt Construction staff and approved suppliers.</li>
+                <li><strong>Contractual Terms and Conditions:</strong> All purchase orders raised through this system remain subject to the underlying construction contracts.</li>
+              </ul>
+              <div class="small">
+                <strong>Share & Alerts:</strong><br>
+                While DeWalt is not a listed company, project stakeholders can register for:
+                <ul class="mb-0">
+                  <li>Site progress and delay alerts</li>
+                  <li>Material stock-out warnings</li>
+                  <li>Weekly supply chain summaries</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card p-3">
+              <div class="card-title">Head Office Contact</div>
+              <div class="small mb-2">
+                <strong>Head Office – Address</strong><br>
+                53 Andries Street<br>
+                Wynberg, Johannesburg<br>
+                South Africa, 2090
+              </div>
+              <div class="small mb-2">
+                <strong>Head Office – Contact</strong><br>
+                Tel: +27 11 321 7200<br>
+                Fax: +27 11 887 4364<br>
+                Email: info@dewaltconstruction.co.za
+              </div>
+              <div class="small">
+                <strong>Tender Enquiries</strong><br>
+                • Commercial building projects<br>
+                • Civil and industrial plant projects<br>
+                • Roads, earthworks and mining projects
+              </div>
+            </div>
           </div>
         </div>
-        <div class = "modal-footer">
-          <button type = "button" class = "btn btn-outline-secondary" data-bs-dismiss = "modal">Cancel</button>
-          <button type = "submit" class = "btn btn-primary">Add Order</button>
-        </div>
-      </form>
+      </main>
     </div>
   </div>
 
-  <script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src = "app.js"></script>
+  <!-- Global loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay d-none">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading latest supply chain data…</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
