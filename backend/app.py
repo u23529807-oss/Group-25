@@ -6,6 +6,7 @@ from datetime import datetime, date
 from config import Config
 from models import db, Site, Supplier, Material, Inventory, Order
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -23,7 +24,7 @@ def create_app():
     def health():
         return jsonify({"status": "ok", "timestamp": datetime.utcnow().isoformat()})
 
-    # ---------- READ: Sites, Suppliers, Materials ---------- #
+    # ---------- CREATE + READ: Sites ---------- #
     @app.route("/api/sites", methods=["GET"])
     def get_sites():
         sites = Site.query.all()
@@ -32,6 +33,37 @@ def create_app():
             for s in sites
         ])
 
+    @app.route("/api/sites", methods=["POST"])
+    def create_site():
+        """
+        Simple endpoint so your 'Add Site' button can create a new site.
+        Expected JSON:
+        {
+            "site_name": "...",
+            "status": "WORKING" or "WIP"
+        }
+        """
+        data = request.get_json() or {}
+        site_name = data.get("site_name")
+        status = data.get("status", "WORKING").upper()
+
+        if not site_name:
+            return jsonify({"error": "site_name is required"}), 400
+
+        site = Site(site_name=site_name, status=status)
+        db.session.add(site)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Site created",
+            "site": {
+                "site_id": site.site_id,
+                "site_name": site.site_name,
+                "status": site.status
+            }
+        }), 201
+
+    # ---------- READ: Suppliers, Materials ---------- #
     @app.route("/api/suppliers", methods=["GET"])
     def get_suppliers():
         sups = Supplier.query.all()
@@ -58,9 +90,14 @@ def create_app():
             for m in mats
         ])
 
-    # ---------- READ & UPDATE: Inventory ---------- #
+    # ---------- READ & UPDATE: Inventory (Material Overview / Live Cards) ---------- #
     @app.route("/api/inventory", methods=["GET"])
     def get_inventory():
+        """
+        This powers your 'material overview'. Frontend can poll this
+        to keep the frames/cards live.
+        Optional query param: ?site_id=1
+        """
         site_id = request.args.get("site_id", type=int)
         query = Inventory.query
         if site_id:
@@ -92,6 +129,9 @@ def create_app():
 
     @app.route("/api/inventory/<int:inventory_id>", methods=["PATCH"])
     def update_inventory(inventory_id):
+        """
+        Use this when you adjust stock (e.g. + / - buttons on manager page).
+        """
         item = Inventory.query.get_or_404(inventory_id)
         data = request.get_json() or {}
         if "qty" in data:
@@ -101,9 +141,13 @@ def create_app():
         db.session.commit()
         return jsonify({"message": "Inventory updated"})
 
-    # ---------- CREATE / READ / UPDATE: Orders ---------- #
+    # ---------- CREATE / READ / UPDATE / DELETE: Orders ---------- #
     @app.route("/api/orders", methods=["GET"])
     def get_orders():
+        """
+        Returns all orders, optionally filtered by status.
+        Adds quantity to the JSON so the UI can show how much was ordered.
+        """
         status = request.args.get("status")
         query = Order.query
         if status:
@@ -121,6 +165,7 @@ def create_app():
                     "supplier_name": o.supplier.name,
                     "site_id": o.site_id,
                     "site_name": o.site.site_name,
+                    "quantity": getattr(o, "quantity", None),  # requires Order.quantity in model
                     "eta": o.eta.isoformat() if o.eta else None,
                     "status": o.status,
                     "delivered_at": o.delivered_at.isoformat() if o.delivered_at else None,
@@ -131,8 +176,21 @@ def create_app():
 
     @app.route("/api/orders", methods=["POST"])
     def create_order():
-        data = request.get_json()
-        required = ["material_id", "supplier_id", "site_id", "eta"]
+        """
+        Create a new order.
+
+        Expected JSON:
+        {
+            "material_id": 1,
+            "supplier_id": 1,
+            "site_id": 1,
+            "eta": "2025-11-30",
+            "status": "SCHEDULED",    # optional
+            "quantity": 50            # NEW: required for interactive orders
+        }
+        """
+        data = request.get_json() or {}
+        required = ["material_id", "supplier_id", "site_id", "eta", "quantity"]
         if not all(k in data for k in required):
             return jsonify({"error": "Missing required fields"}), 400
 
@@ -142,6 +200,8 @@ def create_app():
             site_id=data["site_id"],
             eta=parse_date(data["eta"]),
             status=data.get("status", "SCHEDULED").upper(),
+            # Make sure Order model has a 'quantity' column
+            quantity=int(data["quantity"]),
         )
         db.session.add(order)
         db.session.commit()
@@ -149,6 +209,9 @@ def create_app():
 
     @app.route("/api/orders/<int:order_id>", methods=["PATCH"])
     def update_order(order_id):
+        """
+        Update order status, ETA, delay_reason or quantity.
+        """
         order = Order.query.get_or_404(order_id)
         data = request.get_json() or {}
 
@@ -160,9 +223,13 @@ def create_app():
             order.eta = parse_date(data["eta"])
         if "delay_reason" in data:
             order.delay_reason = data["delay_reason"]
+        if "quantity" in data:
+            # quantity edit (e.g. supplier sends partial shipment update)
+            order.quantity = int(data["quantity"])
+
         db.session.commit()
         return jsonify({"message": "Order updated"})
-    
+
     @app.route("/api/orders/<int:order_id>", methods=["DELETE"])
     def delete_order(order_id):
         order = Order.query.get_or_404(order_id)
