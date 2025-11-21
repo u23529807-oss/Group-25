@@ -14,7 +14,7 @@
   <div class="app-container d-flex">
 
     <!-- =========================
-         SIDEBAR (NO ICONS)
+         SIDEBAR
          ========================= -->
     <nav class="sidebar">
       <div class="sidebar-logo">
@@ -22,18 +22,10 @@
       </div>
 
       <ul class="nav flex-column sidebar-nav">
-        <li class="nav-item">
-          <a href="index.html" class="nav-link">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a href="supplier.html" class="nav-link">Supplier Portal</a>
-        </li>
-        <li class="nav-item">
-          <a href="manager.html" class="nav-link">Inventory</a>
-        </li>
-        <li class="nav-item">
-          <a href="reports.html" class="nav-link active">Reports</a>
-        </li>
+        <li class="nav-item"><a href="index.html" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="supplier.html" class="nav-link">Supplier Portal</a></li>
+        <li class="nav-item"><a href="manager.html" class="nav-link">Inventory</a></li>
+        <li class="nav-item"><a href="reports.html" class="nav-link active">Reports</a></li>
       </ul>
     </nav>
 
@@ -45,29 +37,27 @@
       <!-- TOPBAR -->
       <header class="topbar d-flex align-items-center justify-content-between">
         <div class="topbar-title">
-          <h1 class="page-title" style="font-size: 1.9rem; font-weight: 800;">
-            Performance & Sustainability Reports
-          </h1>
-          <p class="page-subtitle">Comparing orders, inventory, progress meters, and resource usage trends.</p>
+          <h1 class="page-title fw-bold">Performance & Sustainability Reports</h1>
+          <p class="page-subtitle">Comparing orders, inventory health, build progress, and resource usage.</p>
         </div>
-
         <div class="topbar-actions d-flex align-items-center gap-2">
           <span class="badge bg-primary topbar-badge">Analytics View</span>
         </div>
       </header>
 
+      <!-- MAIN -->
       <main class="content">
 
         <!-- =========================
-             ORDERS & INVENTORY PIE CHARTS
+             ORDERS & INVENTORY CHARTS
              ========================= -->
         <div class="row g-3 mb-4">
           <div class="col-lg-6">
             <div class="card p-3" style="min-height: 330px;">
               <div class="card-title">Orders by Status</div>
               <canvas id="ordersPieChart"></canvas>
-              <p class="small text-muted mt-2 mb-0">
-                Proportion of orders across stages: Scheduled, In Transit, Delayed and Delivered.
+              <p class="small text-muted mt-2">
+                Distribution of orders across all sites by operational status.
               </p>
             </div>
           </div>
@@ -76,54 +66,51 @@
             <div class="card p-3" style="min-height: 330px;">
               <div class="card-title">Inventory Health Breakdown</div>
               <canvas id="inventoryPieChart"></canvas>
-              <p class="small text-muted mt-2 mb-0">
-                Number of items in optimal stock, low stock, or needing reorder across all sites.
+              <p class="small text-muted mt-2">
+                Count of materials currently in optimal stock, low stock or reorder status.
               </p>
             </div>
           </div>
         </div>
 
         <!-- =========================
-             SUSTAINABILITY & RESOURCE USE
+             SUSTAINABILITY + UTILITIES
              ========================= -->
         <div class="row g-3 mb-4">
 
-          <!-- Sustainability Notes -->
           <div class="col-lg-5">
             <div class="card p-3 h-100">
               <div class="card-title">Sustainability Highlights</div>
-              <ul class="small mb-2">
-                <li><strong>Material utilisation:</strong> Surplus cement and bricks reallocated between active sites.</li>
-                <li><strong>Transport efficiency:</strong> Deliveries consolidated to cut unnecessary truck movements.</li>
-                <li><strong>Waste handling:</strong> Clean rubble reused as fill; hazardous waste separately logged.</li>
+              <ul class="small">
+                <li><strong>Material reallocation:</strong> Excess stock shifted between Klerksoord & Amandasig.</li>
+                <li><strong>Logistics optimisation:</strong> Route clustering reduces transport costs.</li>
+                <li><strong>Waste reduction:</strong> Clean rubble reused; hazardous waste separated.</li>
               </ul>
-              <p class="small mb-0">
-                Future enhancements can include carbon footprint per build stage, renewable material percentages,
-                and automated sustainability scoring.
+              <p class="small text-muted mb-0">
+                Future reporting can integrate carbon footprint scoring & renewable percentage metrics.
               </p>
             </div>
           </div>
 
-          <!-- Water & Electricity Usage -->
           <div class="col-lg-7">
             <div class="card p-3" style="min-height: 300px;">
               <div class="card-title">Resource Usage – Water & Electricity</div>
-              <p class="small text-muted mb-2">
-                Adjustable indicators representing typical resource consumption across construction phases.
+              <p class="small text-muted">
+                Adjustable indicators simulate real-time consumption across build phases.
               </p>
 
               <canvas id="utilityUsageChart"></canvas>
 
               <div class="row g-2 mt-3 small">
                 <div class="col-sm-6">
-                  <label for="waterScale" class="form-label mb-1">
+                  <label class="form-label small">
                     Water usage scale: <span id="waterScaleLabel">100%</span>
                   </label>
                   <input type="range" class="form-range" id="waterScale" min="50" max="150" value="100">
                 </div>
 
                 <div class="col-sm-6">
-                  <label for="electricScale" class="form-label mb-1">
+                  <label class="form-label small">
                     Electricity usage scale: <span id="electricScaleLabel">100%</span>
                   </label>
                   <input type="range" class="form-range" id="electricScale" min="50" max="150" value="100">
@@ -140,30 +127,30 @@
           <div class="col-lg-12">
             <div class="card p-3" style="min-height: 340px;">
               <div class="card-title">House Build Progress</div>
-              <p class="small text-muted mb-2">
-                Tracks percentage completion for each residential unit under construction across all active sites.
+              <p class="small text-muted">
+                Tracks completion percentage for each unit currently under construction.
               </p>
 
               <canvas id="houseProgressChart"></canvas>
 
-              <!-- Add new house section -->
+              <!-- New House Form -->
               <form id="newHouseForm" class="row g-2 mt-3">
-                <div class="col-md-5">
-                  <label for="houseName" class="form-label small mb-1">House name / unit</label>
-                  <input type="text" id="houseName" class="form-control form-control-sm" placeholder="e.g. Klerksoord 5A">
+                <div class="col-md-4">
+                  <label class="form-label small">House/Unit Name</label>
+                  <input type="text" id="houseName" class="form-control form-control-sm" placeholder="e.g. Klerksoord Unit 5A">
                 </div>
 
                 <div class="col-md-4">
-                  <label for="houseStartDate" class="form-label small mb-1">Start date</label>
+                  <label class="form-label small">Start Date</label>
                   <input type="date" id="houseStartDate" class="form-control form-control-sm">
                 </div>
 
-                <div class="col-md-3 d-flex align-items-end">
-                  <button type="submit" class="btn btn-sm btn-primary w-100">Start new house</button>
+                <div class="col-md-4 d-flex align-items-end">
+                  <button type="submit" class="btn btn-sm btn-primary w-100">Start Unit</button>
                 </div>
               </form>
 
-              <ul id="housesList" class="small mt-3 mb-0"></ul>
+              <ul id="housesList" class="small mt-3"></ul>
             </div>
           </div>
         </div>
@@ -180,7 +167,9 @@
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- Main logic -->
   <script src="app.js"></script>
 
 </body>
-</html>
+</html

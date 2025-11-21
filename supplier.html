@@ -11,153 +11,183 @@
 </head>
 
 <body class="supplier-page">
-  <div class="app-container d-flex">
+<div class="app-container d-flex">
 
-    <!-- =========================
-         SIDEBAR (NO ICONS)
-         ========================= -->
-    <nav class="sidebar">
-      <div class="sidebar-logo">
-        <span class="logo-text">DEWALT SUPPLY</span>
+  <!-- =========================
+       SIDEBAR
+       ========================= -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-text">DEWALT SUPPLY</span>
+    </div>
+
+    <ul class="nav flex-column sidebar-nav">
+      <li class="nav-item"><a href="index.html" class="nav-link">Dashboard</a></li>
+      <li class="nav-item"><a href="supplier.html" class="nav-link active">Supplier Portal</a></li>
+      <li class="nav-item"><a href="manager.html" class="nav-link">Inventory</a></li>
+      <li class="nav-item"><a href="reports.html" class="nav-link">Reports</a></li>
+    </ul>
+  </nav>
+
+  <!-- =========================
+       MAIN CONTENT
+       ========================= -->
+  <div class="main-content flex-grow-1">
+
+    <!-- TOPBAR -->
+    <header class="topbar d-flex align-items-center justify-content-between">
+      <div class="topbar-title">
+        <h1 class="page-title fw-bold" style="font-size: 1.8rem;">
+          Supplier Order Board
+        </h1>
+        <p class="page-subtitle">Update ETAs, report delays, and confirm deliveries in real time.</p>
       </div>
 
-      <ul class="nav flex-column sidebar-nav">
-        <li class="nav-item">
-          <a href="index.html" class="nav-link">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a href="supplier.html" class="nav-link active">Supplier Portal</a>
-        </li>
-        <li class="nav-item">
-          <a href="manager.html" class="nav-link">Inventory</a>
-        </li>
-        <li class="nav-item">
-          <a href="reports.html" class="nav-link">Reports</a>
-        </li>
-      </ul>
-    </nav>
+      <div class="topbar-actions d-flex align-items-center gap-2">
+        <span class="badge bg-info topbar-badge">Supplier View</span>
+      </div>
+    </header>
 
-    <!-- =========================
-         MAIN CONTENT
-         ========================= -->
-    <div class="main-content flex-grow-1">
+    <main class="content">
 
-      <!-- TOPBAR -->
-      <header class="topbar d-flex align-items-center justify-content-between">
-        <div class="topbar-title">
-          <h1 class="page-title" style="font-size: 1.8rem; font-weight: 800;">
-            Supplier Order Board
-          </h1>
-          <p class="page-subtitle">Update ETAs, report delays, and confirm deliveries in real time.</p>
-        </div>
+      <div class="row g-3 mb-4">
 
-        <div class="topbar-actions d-flex align-items-center gap-2">
-          <span class="badge bg-info topbar-badge">Supplier View</span>
-        </div>
-      </header>
+        <!-- =========================
+             ASSIGNED ORDERS
+             ========================= -->
+        <div class="col-lg-8">
+          <div class="card p-3">
+            <div class="card-title">Assigned Orders</div>
 
-      <main class="content">
+            <p class="small text-muted">
+              Use the buttons to mark loads as <strong>Delivered</strong> or flag <strong>Delays</strong>.
+            </p>
 
-        <!-- MAIN ROW -->
-        <div class="row g-3 mb-4">
-
-          <!-- =========================
-               ASSIGNED ORDERS TABLE
-               ========================= -->
-          <div class="col-lg-8">
-            <div class="card p-3">
-              <div class="card-title">Assigned Orders</div>
-
-              <p class="small text-muted">
-                Use the buttons to mark loads as <strong>Delivered</strong> or to flag <strong>Delays</strong> with updated ETAs.
-              </p>
-
-              <div class="table-responsive">
-                <table class="table table-sm align-middle">
-                  <thead>
-                    <tr>
-                      <th>Order #</th>
-                      <th>Material</th>
-                      <th>Site</th>
-                      <th>ETA</th>
-                      <th>Status</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="supplierOrdersTable">
-                    <!-- Filled by app.js -->
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- EMPTY STATE -->
-              <div id="emptyStateBlock" class="empty-state d-none">
-                <h3 class="fw-semibold">No Active Deliveries</h3>
-                <p class="text-muted small">
-                  There are currently no outstanding orders assigned to this supplier profile.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- =========================
-               SUPPLIER INFO CARDS
-               ========================= -->
-          <div class="col-lg-4">
-
-            <!-- BUILD IT -->
-            <div class="card p-3 mb-3">
-              <div class="card-title">Preferred Supplier: Build It</div>
-
-              <p class="small fw-semibold mb-1">Material Categories</p>
-              <ul class="small mb-2">
-                <li>Bricks (Pallets)</li>
-                <li>Concrete & ready-mix</li>
-                <li>River sand & crusher stone</li>
-                <li>Cement and general building materials</li>
-              </ul>
-
-              <p class="small fw-semibold mb-1">Contact Details</p>
-              <p class="small mb-0">
-                Build It Pretoria North<br>
-                Tel: +27 12 555 0000<br>
-                Email: orders@buildit.co.za
-              </p>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Material</th>
+                    <th>Site</th>
+                    <th>Qty</th>
+                    <th>ETA</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="supplierOrdersTable">
+                  <!-- Filled dynamically by app.js -->
+                </tbody>
+              </table>
             </div>
 
-            <!-- OTHER SUPPLIERS -->
-            <div class="card p-3">
-              <div class="card-title">Other Supply Partners</div>
-
-              <p class="small fw-semibold mb-1">Civil & Structural Suppliers</p>
-              <ul class="small mb-2">
-                <li>Steel Service Centres – TMT Steel Bars, Rebar, Mesh</li>
-                <li>Roofing suppliers – Roof Tiles, Trusses</li>
-              </ul>
-
-              <p class="small">
-                For all order number queries, ETA disputes or site access issues, email the
-                procurement team at:<br>
-                <strong>procurement@dewaltconstruction.co.za</strong>
+            <!-- EMPTY STATE -->
+            <div id="emptyStateBlock" class="empty-state d-none text-center p-4">
+              <h3 class="fw-semibold">No Active Deliveries</h3>
+              <p class="text-muted small">
+                There are currently no outstanding orders for this supplier.
               </p>
             </div>
           </div>
         </div>
 
-      </main>
-    </div>
-  </div>
+        <!-- =========================
+             RIGHT COLUMN (ORDER FORM + SUPPLIER CARDS)
+             ========================= -->
+        <div class="col-lg-4">
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingOverlay" class="loading-overlay d-none">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Syncing orders with DeWalt…</div>
-  </div>
+          <!-- CREATE ORDER -->
+          <div class="card p-3 mb-3">
+            <div class="card-title">Create New Order</div>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="app.js"></script>
+            <form id="newOrderForm" class="small">
+
+              <div class="mb-2">
+                <label class="form-label mb-1">Site</label>
+                <select id="orderSite" class="form-select form-select-sm"></select>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label mb-1">Material</label>
+                <select id="orderMaterial" class="form-select form-select-sm"></select>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label mb-1">Supplier</label>
+                <select id="orderSupplier" class="form-select form-select-sm"></select>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label mb-1">ETA</label>
+                <input type="date" id="orderEta" class="form-control form-control-sm">
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label mb-1">Quantity</label>
+                <input type="number" id="orderQty" class="form-control form-control-sm" min="1" placeholder="e.g. 10">
+              </div>
+
+              <div class="d-grid mt-2">
+                <button type="submit" class="btn btn-sm btn-primary">Create order</button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- PREFERRED SUPPLIER -->
+          <div class="card p-3 mb-3">
+            <div class="card-title">Preferred Supplier: Build It</div>
+
+            <p class="small fw-semibold mb-1">Material Categories</p>
+            <ul class="small mb-2 ps-3">
+              <li>Bricks (Pallets)</li>
+              <li>Concrete & Ready-mix</li>
+              <li>River Sand & Stone</li>
+              <li>Cement & General Building Materials</li>
+            </ul>
+
+            <p class="small fw-semibold mb-1">Contact Details</p>
+            <p class="small mb-0">
+              Build It Pretoria North<br>
+              Tel: +27 12 555 0000<br>
+              Email: orders@buildit.co.za
+            </p>
+          </div>
+
+          <!-- OTHER SUPPLIERS -->
+          <div class="card p-3">
+            <div class="card-title">Other Supply Partners</div>
+
+            <p class="small fw-semibold mb-1">Civil & Structural Suppliers</p>
+            <ul class="small ps-3 mb-2">
+              <li>Steel Service Centres – Rebar, Mesh</li>
+              <li>Roofing Suppliers – Tiles, Trusses</li>
+            </ul>
+
+            <p class="small">
+              For order queries, access issues or ETA escalations:<br>
+              <strong>jjjvw@mweb.co.za</strong>
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" class="loading-overlay d-none">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Syncing orders with DeWalt…</div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>

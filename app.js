@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // REUSABLE UI HELPERS
 // =======================================
 function getStatusBadge(status) {
-    const s = status.toUpperCase();
+    const s = status?.toUpperCase() || "";
     const colors = {
         OK: "badge-status-ok",
         LOW: "badge-status-low",
@@ -67,55 +67,67 @@ function showEmptyState(id, show = true) {
 }
 
 // =======================================
-// FEATURE: Persistent Custom Sites
+// FEATURE: Sites (NOW BACKED BY API)
 // =======================================
 
-// Save site list
-function saveSites(sites) {
-    localStorage.setItem("dewalt_sites", JSON.stringify(sites));
-}
-
-// Load site list
-function loadSavedSites() {
-    const data = localStorage.getItem("dewalt_sites");
-    return data ? JSON.parse(data) : [];
-}
-
-// Render site list UI
-function renderSites() {
+// Render sites from API into the Captured Sites list
+async function renderSites() {
     const siteListEl = document.getElementById("siteList");
     if (!siteListEl) return;
 
-    const sites = loadSavedSites();
-    siteListEl.innerHTML = "";
+    try {
+        const sites = await api(`${API_BASE}/sites`);
+        siteListEl.innerHTML = "";
 
-    sites.forEach(site => {
-        const li = document.createElement("li");
-        li.textContent = `${site.name} – ${site.location}`;
-        siteListEl.appendChild(li);
-    });
+        if (!sites.length) {
+            siteListEl.innerHTML = `<li class="text-muted">No sites captured yet.</li>`;
+            return;
+        }
+
+        sites.forEach(s => {
+            const li = document.createElement("li");
+            li.textContent = `${s.site_name} – ${s.status}`;
+            siteListEl.appendChild(li);
+        });
+    } catch (err) {
+        console.error("Error loading sites:", err);
+        siteListEl.innerHTML = `<li class="text-danger">Failed to load sites.</li>`;
+    }
 }
 
-// Add new site to LocalStorage
+// Add new site via API
 function initSiteForm() {
     const form = document.getElementById("siteForm");
     if (!form) return;
 
-    form.addEventListener("submit", e => {
+    const nameInput = document.getElementById("siteName");
+    const statusSelect = document.getElementById("siteStatus");
+
+    form.addEventListener("submit", async e => {
         e.preventDefault();
 
-        const name = document.getElementById("siteName").value.trim();
-        const location = document.getElementById("siteLocation").value.trim();
-        if (!name || !location) return;
+        const site_name = nameInput.value.trim();
+        const status = statusSelect.value;
 
-        const sites = loadSavedSites();
-        sites.push({ name, location });
-        saveSites(sites);
+        if (!site_name) {
+            alert("Please enter a site name.");
+            return;
+        }
 
-        renderSites();
-        form.reset();
+        try {
+            showLoading();
+            await api(`${API_BASE}/sites`, "POST", { site_name, status });
+            await renderSites(); // reload list after successful creation
+            form.reset();
+        } catch (err) {
+            console.error("Create site error:", err);
+            alert("Failed to add site.");
+        } finally {
+            hideLoading();
+        }
     });
 
+    // initial render
     renderSites();
 }
 
@@ -123,11 +135,12 @@ function initSiteForm() {
 // FEATURE: Create & Delete Orders
 // =======================================
 
-// CREATE ORDER
+// CREATE ORDER (now with quantity)
 async function createOrder(orderData) {
     showLoading();
     try {
         await api(`${API_BASE}/orders`, "POST", orderData);
+        // Refresh related views
         loadSupplierOrders();
         loadInventory();
     } catch (error) {
@@ -194,7 +207,7 @@ async function loadDashboard() {
             }
         });
 
-        // Init persistent sites
+        // Init Add Site form (now API-based)
         initSiteForm();
 
     } catch (e) {
@@ -213,6 +226,7 @@ async function loadSupplierOrders() {
         const orders = await api(`${API_BASE}/orders`);
 
         const table = document.getElementById("supplierOrdersTable");
+        if (!table) return;
         table.innerHTML = "";
 
         if (!orders.length) {
@@ -223,12 +237,15 @@ async function loadSupplierOrders() {
 
         orders.forEach(order => {
             const badge = getStatusBadge(order.status);
+            const qty = order.quantity ?? "-";
+
             const row = `
                 <tr>
                     <td>${order.order_id}</td>
                     <td>${order.material_name}</td>
                     <td>${order.site_name}</td>
-                    <td>${order.eta}</td>
+                    <td>${qty}</td>
+                    <td>${order.eta || "-"}</td>
                     <td>${badge}</td>
                     <td class="text-end">
                         <button class="btn btn-success btn-sm" onclick="updateOrderStatus(${order.order_id}, 'DELIVERED')">Delivered</button>
@@ -249,8 +266,13 @@ async function loadSupplierOrders() {
 
 // UPDATE ORDER STATUS
 async function updateOrderStatus(id, status) {
-    await api(`${API_BASE}/orders/${id}`, "PATCH", { status });
-    loadSupplierOrders();
+    try {
+        await api(`${API_BASE}/orders/${id}`, "PATCH", { status });
+        loadSupplierOrders();
+    } catch (err) {
+        console.error("Update order status error:", err);
+        alert("Failed to update order status.");
+    }
 }
 
 // DELAY ORDER (prompt)
@@ -259,17 +281,81 @@ async function delayOrder(id) {
     const reason = prompt("Reason for delay:");
     if (!eta || !reason) return;
 
-    await api(`${API_BASE}/orders/${id}`, "PATCH", {
-        status: "DELAYED",
-        eta,
-        delay_reason: reason
-    });
-
-    loadSupplierOrders();
+    try {
+        await api(`${API_BASE}/orders/${id}`, "PATCH", {
+            status: "DELAYED",
+            eta,
+            delay_reason: reason
+        });
+        loadSupplierOrders();
+    } catch (err) {
+        console.error("Delay order error:", err);
+        alert("Failed to delay order.");
+    }
 }
 
 // =======================================
-// MANAGER PAGE
+// INITIALIZE CREATE ORDER FORM (Reports page)
+// =======================================
+async function initOrderForm() {
+    const form = document.getElementById("newOrderForm");
+    if (!form) return;
+
+    const siteSelect = document.getElementById("orderSite");
+    const matSelect  = document.getElementById("orderMaterial");
+    const supSelect  = document.getElementById("orderSupplier");
+    const etaInput   = document.getElementById("orderEta");
+    const qtyInput   = document.getElementById("orderQty"); // NEW: quantity input
+
+    try {
+        const [sites, materials, suppliers] = await Promise.all([
+            api(`${API_BASE}/sites`),
+            api(`${API_BASE}/materials`),
+            api(`${API_BASE}/suppliers`)
+        ]);
+
+        siteSelect.innerHTML = sites
+            .map(s => `<option value="${s.site_id}">${s.site_name}</option>`)
+            .join("");
+
+        matSelect.innerHTML = materials
+            .map(m => `<option value="${m.material_id}">${m.name}</option>`)
+            .join("");
+
+        supSelect.innerHTML = suppliers
+            .map(s => `<option value="${s.supplier_id}">${s.name}</option>`)
+            .join("");
+
+    } catch (err) {
+        console.error("Dropdown load error:", err);
+    }
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const quantity = parseInt(qtyInput?.value || "0", 10);
+
+        if (!quantity || quantity <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
+
+        const orderData = {
+            site_id: parseInt(siteSelect.value),
+            material_id: parseInt(matSelect.value),
+            supplier_id: parseInt(supSelect.value),
+            eta: etaInput.value,
+            status: "SCHEDULED",
+            quantity: quantity
+        };
+
+        await createOrder(orderData);
+        form.reset();
+    });
+}
+
+// =======================================
+// MANAGER PAGE — INVENTORY OVERVIEW
 // =======================================
 async function loadInventory() {
     try {
@@ -277,6 +363,7 @@ async function loadInventory() {
         const items = await api(`${API_BASE}/inventory`);
 
         const table = document.getElementById("inventoryTable");
+        if (!table) return;
         table.innerHTML = "";
 
         if (!items.length) {
@@ -312,8 +399,13 @@ async function loadInventory() {
 // PATCH inventory qty
 async function adjustQty(id, qty) {
     if (qty < 0) return;
-    await api(`${API_BASE}/inventory/${id}`, "PATCH", { qty });
-    loadInventory();
+    try {
+        await api(`${API_BASE}/inventory/${id}`, "PATCH", { qty });
+        loadInventory();
+    } catch (err) {
+        console.error("Adjust qty error:", err);
+        alert("Failed to update inventory.");
+    }
 }
 
 // =======================================
@@ -360,6 +452,8 @@ async function loadReports() {
     } catch (e) {
         console.error("Reports Error:", e);
     } finally {
+        // Initialise order creation form (with quantity)
+        initOrderForm();
         hideLoading();
     }
 }

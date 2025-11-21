@@ -11,145 +11,171 @@
 </head>
 
 <body class="manager-page">
-  <div class="app-container d-flex">
+<div class="app-container d-flex">
 
-    <!-- =========================
-         SIDEBAR (NO ICONS)
-         ========================= -->
-    <nav class="sidebar">
-      <div class="sidebar-logo">
-        <span class="logo-text">DEWALT SUPPLY</span>
+  <!-- =========================
+       SIDEBAR
+       ========================= -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-text">DEWALT SUPPLY</span>
+    </div>
+
+    <ul class="nav flex-column sidebar-nav">
+      <li class="nav-item"><a href="index.html" class="nav-link">Dashboard</a></li>
+      <li class="nav-item"><a href="supplier.html" class="nav-link">Supplier Portal</a></li>
+      <li class="nav-item"><a href="manager.html" class="nav-link active">Inventory</a></li>
+      <li class="nav-item"><a href="reports.html" class="nav-link">Reports</a></li>
+    </ul>
+  </nav>
+
+  <!-- =========================
+       MAIN CONTENT
+       ========================= -->
+  <div class="main-content flex-grow-1">
+
+    <!-- TOPBAR -->
+    <header class="topbar d-flex align-items-center justify-content-between">
+      <div class="topbar-title">
+        <h1 class="page-title fw-bold" style="font-size: 1.8rem;">
+          Inventory & Material Control
+        </h1>
+        <p class="page-subtitle">Monitor site stock levels, record usage and confirm deliveries.</p>
       </div>
 
-      <ul class="nav flex-column sidebar-nav">
-        <li class="nav-item">
-          <a href="index.html" class="nav-link">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a href="supplier.html" class="nav-link">Supplier Portal</a>
-        </li>
-        <li class="nav-item">
-          <a href="manager.html" class="nav-link active">Inventory</a>
-        </li>
-        <li class="nav-item">
-          <a href="reports.html" class="nav-link">Reports</a>
-        </li>
-      </ul>
-    </nav>
+      <div class="topbar-actions d-flex align-items-center gap-2">
+        <span class="badge bg-warning topbar-badge">Manager View</span>
+      </div>
+    </header>
 
-    <!-- =========================
-         MAIN CONTENT
-         ========================= -->
-    <div class="main-content flex-grow-1">
+    <!-- MAIN SECTION -->
+    <main class="content">
 
-      <!-- TOPBAR -->
-      <header class="topbar d-flex align-items-center justify-content-between">
-        <div class="topbar-title">
-          <h1 class="page-title" style="font-size: 1.8rem; font-weight: 800;">
-            Inventory & Material Control
-          </h1>
-          <p class="page-subtitle">Track stock levels per site, adjust quantities and plan reorders.</p>
-        </div>
+      <div class="row g-3 mb-4">
 
-        <div class="topbar-actions d-flex align-items-center gap-2">
-          <span class="badge bg-warning topbar-badge">Manager View</span>
-        </div>
-      </header>
+        <!-- =========================
+             LIVE INVENTORY TABLE
+             ========================= -->
+        <div class="col-lg-8">
+          <div class="card p-3">
+            <div class="card-title">Live Inventory by Site</div>
 
-      <main class="content">
+            <p class="small text-muted">
+              Use the <strong>+</strong> and <strong>−</strong> buttons to adjust quantities as materials are delivered or consumed.
+            </p>
 
-        <div class="row g-3 mb-4">
-
-          <!-- =========================
-               LIVE INVENTORY TABLE
-               ========================= -->
-          <div class="col-lg-8">
-            <div class="card p-3">
-              <div class="card-title">Live Inventory by Site</div>
-
-              <p class="small text-muted">
-                Use the <strong>+</strong> and <strong>−</strong> buttons to adjust quantities when deliveries arrive or materials are used.
-              </p>
-
-              <div class="table-responsive">
-                <table class="table table-sm align-middle">
-                  <thead>
-                    <tr>
-                      <th>Material</th>
-                      <th>Site</th>
-                      <th>Quantity</th>
-                      <th>Status</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="inventoryTable">
-                    <!-- Filled by app.js -->
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- EMPTY STATE -->
-              <div id="emptyStateBlock" class="empty-state d-none">
-                <h3 class="fw-semibold">No Inventory Captured</h3>
-                <p class="text-muted small">
-                  Once sites are added and deliveries are captured, real-time stock levels will appear here.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- =========================
-               STATIC MATERIAL OVERVIEW
-               ========================= -->
-          <div class="col-lg-4">
-
-            <div class="card p-3 mb-3">
-              <div class="card-title">Material Overview</div>
-              <p class="small text-muted mb-2">
-                Typical material stock snapshots across Klerksoord and Amandasig sites.
-              </p>
-
-              <ul class="small mb-0">
-                <li><strong>Cement (50kg bags):</strong> 320 bags</li>
-                <li><strong>Bricks (Pallets):</strong> 46 pallets</li>
-                <li><strong>River Sand (kg):</strong> 18 500 kg</li>
-                <li><strong>Doorframes:</strong> 64 units</li>
-                <li><strong>TMT Steel Bars:</strong> 210 bars</li>
-                <li><strong>Windows:</strong> 72 units</li>
-                <li><strong>Insulation Rolls:</strong> 54 rolls</li>
-                <li><strong>Roof Tiles:</strong> 12 800 tiles</li>
-                <li><strong>Ready-mix Concrete (m³):</strong> 95 m³</li>
-              </ul>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>Material</th>
+                    <th>Site</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTable">
+                  <!-- Filled dynamically by app.js -->
+                </tbody>
+              </table>
             </div>
 
-            <div class="card p-3">
-              <div class="card-title">Inventory Policy Notes</div>
-
-              <p class="small mb-1">
-                • <strong>Bricks (Pallets):</strong> ordered in full pallets to reduce breakage and double handling.<br>
-                • <strong>High-value items:</strong> windows, insulation and TMT bars tracked tightly for shrinkage control.<br>
-                • <strong>Bulk materials:</strong> sand and concrete are delivered just-in-time to reduce stockpiling.
+            <!-- EMPTY STATE -->
+            <div id="emptyStateBlock" class="empty-state d-none text-center p-4">
+              <h3 class="fw-semibold">No Inventory Captured</h3>
+              <p class="text-muted small">
+                Once sites and materials are added, live stock levels will appear here.
               </p>
             </div>
-
           </div>
         </div>
 
-      </main>
-    </div>
-  </div>
+        <!-- =========================
+             LIVE MATERIAL OVERVIEW (API-Driven)
+             ========================= -->
+        <div class="col-lg-4">
+          <div class="card p-3 mb-3">
+            <div class="card-title">Material Overview (Live)</div>
+            <p class="small text-muted">
+              Live snapshot of all materials across operational sites.
+            </p>
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingOverlay" class="loading-overlay d-none">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Refreshing inventory levels…</div>
-  </div>
+            <div id="materialOverview" class="small">
+              <!-- Populated by JS below -->
+            </div>
+          </div>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="app.js"></script>
+          <div class="card p-3">
+            <div class="card-title">Inventory Policy Notes</div>
+            <p class="small mb-1">
+              • <strong>Bricks:</strong> Ordered in pallet batches to reduce breakage.<br>
+              • <strong>High-value items:</strong> Windows, insulation and TMT bars tracked individually.<br>
+              • <strong>Bulk materials:</strong> Sand & concrete delivered JIT to reduce wastage.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" class="loading-overlay d-none">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Refreshing inventory data…</div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+
+<!-- MATERIAL OVERVIEW SCRIPT (NEW) -->
+<script>
+async function loadMaterialOverview() {
+  try {
+    const data = await fetch("http://127.0.0.1:5000/api/inventory").then(r => r.json());
+    const cont = document.getElementById("materialOverview");
+    cont.innerHTML = "";
+
+    if (!data.length) {
+      cont.innerHTML = `<p class="text-muted small">No materials recorded yet.</p>`;
+      return;
+    }
+
+    // Group materials by site
+    const grouped = {};
+    data.forEach(item => {
+      if (!grouped[item.site_name]) grouped[item.site_name] = [];
+      grouped[item.site_name].push(item);
+    });
+
+    for (const site in grouped) {
+      cont.innerHTML += `<h6 class="fw-bold mt-2">${site}</h6>`;
+      grouped[site].forEach(m => {
+        cont.innerHTML += `
+          <div class="d-flex justify-content-between border-bottom py-1">
+            <span>${m.material_name}</span>
+            <span class="fw-semibold">${m.qty}</span>
+          </div>
+        `;
+      });
+    }
+
+  } catch (err) {
+    console.error("Material overview error:", err);
+  }
+}
+
+// Auto-load material overview when page loads
+document.addEventListener("DOMContentLoaded", loadMaterialOverview);
+
+// Also auto-refresh every 10 seconds for LIVE dashboard feel
+setInterval(loadMaterialOverview, 10000);
+</script>
 
 </body>
 </html>
-
