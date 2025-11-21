@@ -204,6 +204,34 @@
     </div>
   </div>
 
+  <div class="row g-3 mb-3">
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="card-title">Add Site</div>
+      <form id="siteForm" class="row g-2">
+        <div class="col-md-6">
+          <label for="siteName" class="form-label small mb-1">Site name</label>
+          <input type="text" id="siteName" class="form-control form-control-sm" placeholder="e.g. Klerksoord Extension">
+        </div>
+        <div class="col-md-6">
+          <label for="siteLocation" class="form-label small mb-1">Location</label>
+          <input type="text" id="siteLocation" class="form-control form-control-sm" placeholder="e.g. Pretoria North">
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+          <button type="submit" class="btn btn-sm btn-primary mt-2">Add site</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="card-title">Captured Sites</div>
+      <ul id="siteList" class="small mb-0"></ul>
+    </div>
+  </div>
+</div>
+
   <!-- Global loading overlay -->
   <div id="loadingOverlay" class="loading-overlay d-none">
     <div class="loading-spinner"></div>

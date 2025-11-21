@@ -105,6 +105,20 @@
               </p>
               <!-- You can bind a Chart.js doughnut or bar chart to this canvas in app.js -->
               <canvas id="utilityUsageChart"></canvas>
+              <div class="row g-2 mt-3 small">
+                <div class="col-sm-6">
+                <label for="waterScale" class="form-label mb-1">
+                Water usage scale: <span id="waterScaleLabel">100%</span>
+                </label>
+                <input type="range" class="form-range" id="waterScale" min="50" max="150" value="100">
+                </div>
+              <div class="col-sm-6">
+              <label for="electricScale" class="form-label mb-1">
+              Electricity usage scale: <span id="electricScaleLabel">100%</span>
+              </label>
+              <input type="range" class="form-range" id="electricScale" min="50" max="150" value="100">
+              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -120,6 +134,20 @@
               </p>
               <!-- Bind a bar / horizontal bar chart -->
               <canvas id="houseProgressChart"></canvas>
+              <form id="newHouseForm" class="row g-2 mt-3">
+                <div class="col-md-5">
+                <label for="houseName" class="form-label small mb-1">House name / unit</label>
+                <input type="text" id="houseName" class="form-control form-control-sm" placeholder="e.g. Klerksoord 5A">
+                </div>
+                  <div class="col-md-4">
+                  <label for="houseStartDate" class="form-label small mb-1">Start date</label>
+                  <input type="date" id="houseStartDate" class="form-control form-control-sm">
+                  </div>
+                <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-sm btn-primary w-100">Start new house</button>
+                </div>
+                </form>
+              <ul id="housesList" class="small mt-3 mb-0"></ul>
             </div>
           </div>
         </div>

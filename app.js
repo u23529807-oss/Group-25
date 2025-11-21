@@ -81,7 +81,7 @@ async function loadDashboard() {
         document.getElementById("inTransitOrders").textContent = data.orders.by_status.IN_TRANSIT;
         document.getElementById("deliveredOrders").textContent = data.orders.by_status.DELIVERED;
 
-        // ---- Chart ----
+        // ---- Order Status Chart ----
         const ctx = document.getElementById("orderStatusChart").getContext("2d");
         new Chart(ctx, {
             type: "bar",
@@ -96,92 +96,49 @@ async function loadDashboard() {
                             data.orders.by_status.DELAYED,
                             data.orders.by_status.DELIVERED
                         ],
-                        backgroundColor: ["#6c757d", "#0d6efd", "#dc3545", "#198754"]
+                        backgroundColor: ["#6c757d", "#0d6efd", "#dc3545", "#28a745"]
                     }
                 ]
             }
         });
+
+        // ---- Custom Sites (Name + Location, front-end only) ----
+        const siteForm = document.getElementById("siteForm");
+        const siteListEl = document.getElementById("siteList");
+
+        if (siteForm && siteListEl) {
+            const customSites = [];
+
+            const renderSites = () => {
+                siteListEl.innerHTML = "";
+                customSites.forEach((site) => {
+                    const li = document.createElement("li");
+                    li.textContent = `${site.name} – ${site.location}`;
+                    siteListEl.appendChild(li);
+                });
+            };
+
+            siteForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const nameInput = document.getElementById("siteName");
+                const locationInput = document.getElementById("siteLocation");
+
+                const name = nameInput.value.trim();
+                const location = locationInput.value.trim();
+
+                if (!name || !location) return;
+
+                customSites.push({ name, location });
+                renderSites();
+                siteForm.reset();
+            });
+        }
 
     } catch (error) {
         console.error("Dashboard Error:", error);
     } finally {
         hideLoading();
     }
-}
-
-// =======================================
-// SUPPLIER PAGE
-// =======================================
-async function loadSupplierOrders() {
-    try {
-        showLoading();
-
-        const res = await fetch(`${API_BASE}/orders`);
-        const orders = await res.json();
-
-        const table = document.getElementById("supplierOrdersTable");
-        table.innerHTML = "";
-
-        if (!orders.length) {
-            showEmptyState("emptyStateBlock", true);
-            return;
-        }
-        showEmptyState("emptyStateBlock", false);
-
-        orders.forEach(order => {
-            const badge = getStatusBadge(order.status);
-
-            const row = `
-                <tr>
-                    <td>${order.order_id}</td>
-                    <td>${order.material_name}</td>
-                    <td>${order.site_name}</td>
-                    <td>${order.eta}</td>
-                    <td>${badge}</td>
-                    <td>
-                        <button class="btn btn-success btn-sm" onclick="markDelivered(${order.order_id})">Delivered</button>
-                        <button class="btn btn-warning btn-sm" onclick="delayOrder(${order.order_id})">Delay</button>
-                    </td>
-                </tr>
-            `;
-            table.innerHTML += row;
-        });
-
-    } catch (error) {
-        console.error("Supplier Orders Error:", error);
-    } finally {
-        hideLoading();
-    }
-}
-
-// ---- Supplier Actions ----
-async function markDelivered(orderId) {
-    showLoading();
-    await fetch(`${API_BASE}/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "DELIVERED" })
-    });
-    hideLoading();
-    loadSupplierOrders();
-}
-
-async function delayOrder(orderId) {
-    const newEta = prompt("Enter new ETA (YYYY-MM-DD):");
-    const reason = prompt("Enter delay reason:");
-
-    showLoading();
-    await fetch(`${API_BASE}/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            status: "DELAYED",
-            eta: newEta,
-            delay_reason: reason
-        })
-    });
-    hideLoading();
-    loadSupplierOrders();
 }
 
 // =======================================
@@ -298,7 +255,8 @@ async function loadReports() {
         });
 
         // ----------------------------------------------------
-        // NEW: WATER & ELECTRICITY USAGE ACROSS BUILD PHASES
+        // WATER & ELECTRICITY USAGE ACROSS BUILD PHASES
+        // (Interactive sliders adjust these in real time)
         // ----------------------------------------------------
         const utilityPhases = [
             "Excavation",
@@ -309,26 +267,26 @@ async function loadReports() {
             "Finishes"
         ];
 
-        const waterUsage = [800, 2500, 1800, 950, 600, 450];  // litres
-        const electricityUsage = [120, 340, 220, 150, 180, 260]; // kWh
+        const baseWaterUsage = [800, 2500, 1800, 950, 600, 450];       // litres
+        const baseElectricityUsage = [120, 340, 220, 150, 180, 260];   // kWh
 
         const ctx3 = document.getElementById("utilityUsageChart").getContext("2d");
-        new Chart(ctx3, {
+        const utilityChart = new Chart(ctx3, {
             type: "bar",
             data: {
                 labels: utilityPhases,
                 datasets: [
                     {
                         label: "Water Usage (Litres)",
-                        data: waterUsage,
-                        backgroundColor: "rgba(54, 162, 235, 0.6)", // blue
+                        data: [...baseWaterUsage],
+                        backgroundColor: "rgba(54, 162, 235, 0.6)",
                         borderColor: "rgba(54, 162, 235, 1)",
                         borderWidth: 1
                     },
                     {
                         label: "Electricity Usage (kWh)",
-                        data: electricityUsage,
-                        backgroundColor: "rgba(255, 206, 86, 0.6)", // yellow
+                        data: [...baseElectricityUsage],
+                        backgroundColor: "rgba(255, 206, 86, 0.6)",
                         borderColor: "rgba(255, 206, 86, 1)",
                         borderWidth: 1
                     }
@@ -357,26 +315,59 @@ async function loadReports() {
             }
         });
 
+        // ---- Interactive Sliders for Water & Electricity ----
+        const waterSlider = document.getElementById("waterScale");
+        const waterLabel = document.getElementById("waterScaleLabel");
+        const electricSlider = document.getElementById("electricScale");
+        const electricLabel = document.getElementById("electricScaleLabel");
+
+        if (waterSlider && waterLabel) {
+            waterSlider.addEventListener("input", () => {
+                const factor = parseInt(waterSlider.value, 10) / 100;
+                utilityChart.data.datasets[0].data = baseWaterUsage.map(v => v * factor);
+                waterLabel.textContent = `${waterSlider.value}%`;
+                utilityChart.update();
+            });
+        }
+
+        if (electricSlider && electricLabel) {
+            electricSlider.addEventListener("input", () => {
+                const factor = parseInt(electricSlider.value, 10) / 100;
+                utilityChart.data.datasets[1].data = baseElectricityUsage.map(v => v * factor);
+                electricLabel.textContent = `${electricSlider.value}%`;
+                utilityChart.update();
+            });
+        }
+
         // -------------------------------------------------------
-        // NEW: HOUSE BUILD PROGRESS (8 HOUSES)
+        // HOUSE BUILD PROGRESS (8 HOUSES) + "START NEW HOUSE"
         // -------------------------------------------------------
-        const houseLabels = [
+        let houseLabels = [
             "House 1", "House 2", "House 3", "House 4",
             "House 5", "House 6", "House 7", "House 8"
         ];
 
-        // Dummy realistic progress percentages
-        const progress = [82, 67, 40, 55, 90, 73, 28, 61];
+        let houseProgress = [82, 67, 40, 55, 90, 73, 28, 61];
+        let houseStartDates = [
+            "2025-01-15",
+            "2025-02-03",
+            "2025-02-20",
+            "2025-03-05",
+            "2025-03-18",
+            "2025-04-02",
+            "2025-04-15",
+            "2025-05-01"
+        ];
 
         const ctx4 = document.getElementById("houseProgressChart").getContext("2d");
-        new Chart(ctx4, {
+        const houseChart = new Chart(ctx4, {
             type: "bar",
             data: {
                 labels: houseLabels,
                 datasets: [{
                     label: "Completion (%)",
-                    data: progress,
-                    backgroundColor: progress.map(value => {
+                    data: houseProgress,
+                    backgroundColor: houseProgress.map(value => {
                         if (value >= 80) return "rgba(40, 167, 69, 0.7)";   // green
                         if (value >= 60) return "rgba(0, 123, 255, 0.7)";   // blue
                         if (value >= 40) return "rgba(255, 193, 7, 0.7)";   // yellow
@@ -411,6 +402,58 @@ async function loadReports() {
                 }
             }
         });
+
+        // ---- List & New House Form (Interactive Button) ----
+        const housesListEl = document.getElementById("housesList");
+        const houseForm = document.getElementById("newHouseForm");
+        const houseNameInput = document.getElementById("houseName");
+        const houseStartInput = document.getElementById("houseStartDate");
+
+        const renderHousesList = () => {
+            if (!housesListEl) return;
+            housesListEl.innerHTML = "";
+            houseLabels.forEach((label, idx) => {
+                const li = document.createElement("li");
+                const date = houseStartDates[idx] || "Unknown start date";
+                const prog = houseProgress[idx] ?? 0;
+                li.textContent = `${label} – started ${date} – ${prog}% complete`;
+                housesListEl.appendChild(li);
+            });
+        };
+
+        renderHousesList();
+
+        if (houseForm && houseNameInput && houseStartInput) {
+            houseForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const name = houseNameInput.value.trim();
+                const startDate = houseStartInput.value;
+
+                if (!name || !startDate) return;
+
+                // Add new house with 0% progress
+                houseLabels.push(name);
+                houseProgress.push(0);
+                houseStartDates.push(startDate);
+
+                // Update chart
+                houseChart.data.labels = houseLabels;
+                houseChart.data.datasets[0].data = houseProgress;
+                houseChart.data.datasets[0].backgroundColor = houseProgress.map(value => {
+                    if (value >= 80) return "rgba(40, 167, 69, 0.7)";
+                    if (value >= 60) return "rgba(0, 123, 255, 0.7)";
+                    if (value >= 40) return "rgba(255, 193, 7, 0.7)";
+                    return "rgba(220, 53, 69, 0.7)";
+                });
+                houseChart.update();
+
+                // Update list
+                renderHousesList();
+
+                // Clear form
+                houseForm.reset();
+            });
+        }
 
     } catch (error) {
         console.error("Reports Error:", error);
