@@ -33,13 +33,32 @@ function hideLoading() {
 }
 
 // =======================================
-// PAGE ROUTING
+// PAGE ROUTING (FIXED – ADDS MISSING INITIALIZERS)
 // =======================================
 document.addEventListener("DOMContentLoaded", () => {
-    if (document.body.classList.contains("dashboard-page")) loadDashboard();
-    if (document.body.classList.contains("supplier-page")) loadSupplierOrders();
-    if (document.body.classList.contains("manager-page")) loadInventory();
-    if (document.body.classList.contains("reports-page")) loadReports();
+
+    if (document.body.classList.contains("dashboard-page")) {
+        loadDashboard();
+        initSiteForm();        // REQUIRED
+        renderSites();         // REQUIRED
+    }
+
+    if (document.body.classList.contains("supplier-page")) {
+        loadSupplierOrders();
+        initOrderForm();       // REQUIRED for dropdowns to show
+    }
+
+    if (document.body.classList.contains("manager-page")) {
+        loadInventory();
+        loadMaterialOverview(); // REQUIRED for live overview
+        setInterval(loadInventory, 5000);        // auto-refresh
+        setInterval(loadMaterialOverview, 5000); // auto-refresh
+    }
+
+    if (document.body.classList.contains("reports-page")) {
+        loadReports();
+        initOrderForm(); // REQUIRED so "create order" works
+    }
 });
 
 // =======================================

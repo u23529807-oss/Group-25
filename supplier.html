@@ -40,7 +40,9 @@
         <h1 class="page-title fw-bold" style="font-size: 1.8rem;">
           Supplier Order Board
         </h1>
-        <p class="page-subtitle">Update ETAs, report delays, and confirm deliveries in real time.</p>
+        <p class="page-subtitle">
+          Update ETAs, report delays, and confirm deliveries in real time.
+        </p>
       </div>
 
       <div class="topbar-actions d-flex align-items-center gap-2">
@@ -60,7 +62,8 @@
             <div class="card-title">Assigned Orders</div>
 
             <p class="small text-muted">
-              Use the buttons to mark loads as <strong>Delivered</strong> or flag <strong>Delays</strong>.
+              Use the buttons to mark loads as <strong>Delivered</strong> or flag <strong>Delays</strong>
+              with updated ETAs.
             </p>
 
             <div class="table-responsive">
@@ -104,32 +107,41 @@
             <form id="newOrderForm" class="small">
 
               <div class="mb-2">
-                <label class="form-label mb-1">Site</label>
-                <select id="orderSite" class="form-select form-select-sm"></select>
+                <label for="orderSite" class="form-label mb-1">Site</label>
+                <select id="orderSite" class="form-select form-select-sm" required></select>
               </div>
 
               <div class="mb-2">
-                <label class="form-label mb-1">Material</label>
-                <select id="orderMaterial" class="form-select form-select-sm"></select>
+                <label for="orderMaterial" class="form-label mb-1">Material</label>
+                <select id="orderMaterial" class="form-select form-select-sm" required></select>
               </div>
 
               <div class="mb-2">
-                <label class="form-label mb-1">Supplier</label>
-                <select id="orderSupplier" class="form-select form-select-sm"></select>
+                <label for="orderSupplier" class="form-label mb-1">Supplier</label>
+                <select id="orderSupplier" class="form-select form-select-sm" required></select>
               </div>
 
               <div class="mb-2">
-                <label class="form-label mb-1">ETA</label>
-                <input type="date" id="orderEta" class="form-control form-control-sm">
+                <label for="orderEta" class="form-label mb-1">ETA</label>
+                <input type="date" id="orderEta" class="form-control form-control-sm" required>
               </div>
 
               <div class="mb-2">
-                <label class="form-label mb-1">Quantity</label>
-                <input type="number" id="orderQty" class="form-control form-control-sm" min="1" placeholder="e.g. 10">
+                <label for="orderQty" class="form-label mb-1">Quantity</label>
+                <input
+                  type="number"
+                  id="orderQty"
+                  class="form-control form-control-sm"
+                  min="1"
+                  placeholder="e.g. 10"
+                  required
+                >
               </div>
 
               <div class="d-grid mt-2">
-                <button type="submit" class="btn btn-sm btn-primary">Create order</button>
+                <button type="submit" class="btn btn-sm btn-primary">
+                  Create order
+                </button>
               </div>
 
             </form>

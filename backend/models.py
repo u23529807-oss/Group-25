@@ -5,6 +5,9 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+# -------------------------
+# SITE
+# -------------------------
 class Site(db.Model):
     __tablename__ = "sites"
     site_id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +18,9 @@ class Site(db.Model):
     inventory_items = db.relationship("Inventory", backref="site", lazy=True)
 
 
+# -------------------------
+# SUPPLIER
+# -------------------------
 class Supplier(db.Model):
     __tablename__ = "suppliers"
     supplier_id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +31,9 @@ class Supplier(db.Model):
     orders = db.relationship("Order", backref="supplier", lazy=True)
 
 
+# -------------------------
+# MATERIAL
+# -------------------------
 class Material(db.Model):
     __tablename__ = "materials"
     material_id = db.Column(db.Integer, primary_key=True)
@@ -36,25 +45,48 @@ class Material(db.Model):
     orders = db.relationship("Order", backref="material", lazy=True)
 
 
+# -------------------------
+# INVENTORY
+# -------------------------
 class Inventory(db.Model):
     __tablename__ = "inventory"
     inventory_id = db.Column(db.Integer, primary_key=True)
-    material_id = db.Column(db.Integer, db.ForeignKey("materials.material_id"), nullable=False)
-    site_id = db.Column(db.Integer, db.ForeignKey("sites.site_id"), nullable=False)
+
+    material_id = db.Column(
+        db.Integer, db.ForeignKey("materials.material_id"), nullable=False
+    )
+    site_id = db.Column(
+        db.Integer, db.ForeignKey("sites.site_id"), nullable=False
+    )
+
     qty = db.Column(db.Integer, nullable=False, default=0)
     low_threshold = db.Column(db.Integer, nullable=False, default=10)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
 
 
+# -------------------------
+# ORDER  (UPDATED — includes quantity)
+# -------------------------
 class Order(db.Model):
     __tablename__ = "orders"
     order_id = db.Column(db.Integer, primary_key=True)
-    material_id = db.Column(db.Integer, db.ForeignKey("materials.material_id"), nullable=False)
-    supplier_id = db.Column(db.Integer, db.ForeignKey("suppliers.supplier_id"), nullable=False)
-    site_id = db.Column(db.Integer, db.ForeignKey("sites.site_id"), nullable=False)
+
+    material_id = db.Column(
+        db.Integer, db.ForeignKey("materials.material_id"), nullable=False
+    )
+    supplier_id = db.Column(
+        db.Integer, db.ForeignKey("suppliers.supplier_id"), nullable=False
+    )
+    site_id = db.Column(
+        db.Integer, db.ForeignKey("sites.site_id"), nullable=False
+    )
+
+    # NEW FIELD — required by your updated app.py
+    quantity = db.Column(db.Integer, nullable=False, default=0)
 
     eta = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="SCHEDULED")
