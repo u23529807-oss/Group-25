@@ -318,3 +318,104 @@ body {
     padding: 1rem;
   }
 }
+
+/* ============================================
+   🔥 THEME UPGRADE: BRIGHTER + MORE READABLE
+   Applies to: Muted text, Sidebar text, Overall theme
+   ============================================ */
+
+/* --- LIGHTER, CLEARER THEME BACKGROUNDS --- */
+:root {
+  --bg-main: #0f172a;     /* slightly lighter than pure navy */
+  --bg-card: #1e293b;     /* brighter card background */
+  --bg-sidebar: #0f172a;
+  --bg-topbar: #0f172a;
+  --border-soft: #334155; /* lighter border for contrast */
+
+  --text-main: #f1f5f9;   /* brighter white-ish text */
+  --text-muted: #cbd5e1;  /* brighter muted text */
+
+  --primary: #38bdf8;     /* fresher blue */
+  --accent: #60a5fa;
+}
+
+/* --- SIDEBAR TEXT BRIGHTENING --- */
+.sidebar-nav .nav-link {
+  color: #e2e8f0 !important; /* brighter */
+}
+
+.sidebar-nav .nav-link:hover {
+  background-color: #1e293b;
+  color: #ffffff !important;
+}
+
+/* --- ACTIVE SIDEBAR ITEM MORE VISIBLE --- */
+.sidebar-nav .nav-link.active {
+  background: linear-gradient(to right, #38bdf8, #60a5fa);
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+/* --- CARD TEXT BRIGHTENING --- */
+.card-title {
+  color: #f8fafc !important;
+}
+
+.card p,
+.card .small,
+.card ul li {
+  color: var(--text-muted) !important;
+}
+
+/* --- TABLE TEXT BRIGHTER --- */
+.table tbody td {
+  color: #e2e8f0 !important;
+}
+
+/* --- "EMPTY STATE" TEXT BRIGHTER --- */
+.empty-state h3,
+.empty-state p {
+  color: #e2e8f0 !important;
+}
+
+/* --- FORM LABELS + INPUT TEXT --- */
+.form-label {
+  color: #cbd5e1 !important;
+}
+
+.form-control,
+.form-select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+.form-control::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* --- TOPBAR TEXT BRIGHTER --- */
+.topbar-title h1,
+.page-title {
+  color: #f1f5f9 !important;
+}
+
+.page-subtitle {
+  color: #cbd5e1 !important;
+}
+
+/* --- CHART CANVAS CONTRAST FIX --- */
+canvas {
+  background-color: #1e293b !important;
+  border-radius: 0.8rem;
+}
+
+/* --- BUTTON IMPROVEMENTS --- */
+.btn-primary {
+  background: linear-gradient(to right, #38bdf8, #60a5fa);
+  border: none;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
